@@ -1,0 +1,6 @@
+== Info:   Trying 127.0.0.1:1337...
+== Info: connect to 127.0.0.1 port 1337 failed: Connection refused
+== Info:   Trying [::1]:1337...
+== Info: connect to ::1 port 1337 failed: Connection refused
+== Info: Failed to connect to localhost port 1337 after 4 ms: Couldn't connect to server
+== Info: Closing connection 0
