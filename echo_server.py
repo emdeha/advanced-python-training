@@ -1,7 +1,22 @@
 from wsgiref.simple_server import make_server
 from wsgiref.headers import Headers
+import urllib.request
+import json
 
-def echo_wsgi_app(environ, start_response):
+def trading_wsgi_app(environ, start_response):
+  path = environ['PATH_INFO']
+  if path == '/':
+    return echo_endpoint(environ, start_response)
+  if path.startswith('/ticker'):
+    return ticker_endpoint(environ, start_response)
+  else:
+    return not_found(environ, start_response)
+
+def not_found(environ, start_response):
+  start_response('404 Not Found', [])
+  return []
+
+def echo_endpoint(environ, start_response):
   try:
     request_body_size = int(environ.get('CONTENT_LENGTH', 0))
   except ValueError:
@@ -11,6 +26,19 @@ def echo_wsgi_app(environ, start_response):
 
   start_response('200 OK', [('Content-Type', 'text/plain')])
   return [request_body]
+
+def ticker_endpoint(environ, start_response):
+  symbol = environ['PATH_INFO'].split('/')[2]
+
+  response = urllib.request.urlopen(f'https://query2.finance.yahoo.com/v10/finance/quoteSummary/{symbol}?modules=financialData')
+  content = json.loads(response.read().decode('utf-8'))
+
+  quote = content['quoteSummary']['result'][0]['financialData']
+  open = quote['currentPrice']['fmt']
+  financialCurrency = quote['financialCurrency']
+
+  start_response('200 OK', [('Content-Type', 'text/plain')])
+  return [str.encode(f'Price for {symbol} - {open} {financialCurrency}')]
 
 class APIKeyAuthenticationMiddleware:
   API_KEY = 'test123'
@@ -40,5 +68,5 @@ class APIKeyAuthenticationMiddleware:
     return self.API_KEY_HEADER in self.headers and self.headers[self.API_KEY_HEADER] == self.API_KEY
 
 if __name__ == "__main__":
-  server = make_server('localhost', 1337, APIKeyAuthenticationMiddleware(echo_wsgi_app))
+  server = make_server('localhost', 1337, APIKeyAuthenticationMiddleware(trading_wsgi_app))
   server.serve_forever()
