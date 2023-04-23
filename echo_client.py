@@ -1,9 +1,9 @@
 import socket
 import sys
-from http_parser.http import HttpStream
-from http_parser.reader import SocketReader
+from http_parser.http import HttpStream # type: ignore
+from http_parser.reader import SocketReader # type: ignore
 
-def construct_http_request(msg, apiKey, path):
+def construct_http_request(msg: str, apiKey: str, path: str) -> str:
   return (
     f"POST {path} HTTP/1.1\r\n"
     "Host: localhost:1337\r\n"
@@ -15,7 +15,7 @@ def construct_http_request(msg, apiKey, path):
     f"{msg}\r\n"
   )
 
-def send_msg(msg, apiKey, path):
+def send_msg(msg: str, apiKey: str, path: str) -> None:
   with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.connect(('localhost', 1337))
     s.sendall(str.encode(construct_http_request(msg, apiKey, path)))
