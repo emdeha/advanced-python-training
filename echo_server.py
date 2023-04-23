@@ -1,21 +1,18 @@
 import socket
 
-from http_parser.http import HttpStream, NoMoreData
-from http_parser.reader import SocketReader
+from wsgiref.simple_server import make_server
 
-def handle_connection(conn):
-  with conn:
-    r = SocketReader(conn)
-    p = HttpStream(r)
-    conn.sendall(p.body_string())
+def echo_wsgi_app(environ, start_response):
+  try:
+    request_body_size = int(environ.get('CONTENT_LENGTH', 0))
+  except ValueError:
+    request_body_size = 0
+  
+  request_body = environ['wsgi.input'].read(request_body_size)
 
-def start_listening():
-  with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    s.bind(('localhost', 1337))
-    s.listen()
-    while True:
-      conn, addr = s.accept()
-      handle_connection(conn)
+  start_response('200 OK', [('Content-Type', 'text/plain')])
+  return [request_body]
 
 if __name__ == "__main__":
-  start_listening()
+  server = make_server('localhost', 1337, echo_wsgi_app)
+  server.serve_forever()

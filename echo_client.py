@@ -1,5 +1,7 @@
 import socket
 import sys
+from http_parser.http import HttpStream
+from http_parser.reader import SocketReader
 
 def construct_http_request(msg):
   return (
@@ -16,7 +18,9 @@ def send_msg(msg):
   with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.connect(('localhost', 1337))
     s.sendall(str.encode(construct_http_request(msg)))
-    data = s.recv(1024)
+    r = SocketReader(s)
+    p = HttpStream(r)
+    data = p.body_string()
 
   print('Received', repr(data))
 
