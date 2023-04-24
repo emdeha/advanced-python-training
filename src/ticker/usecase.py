@@ -1,11 +1,11 @@
 import json
 import urllib.request
-from typing import List
-
-from .ticker_list_model import TickerList
 
 def showStats(symbol: str) -> tuple[str, str]:
-  response = urllib.request.urlopen(f'https://query2.finance.yahoo.com/v10/finance/quoteSummary/{symbol}?modules=financialData')
+  try:
+    response = urllib.request.urlopen(f'https://query2.finance.yahoo.com/v10/finance/quoteSummary/{symbol}?modules=financialData')
+  except Exception:
+    raise Exception(symbol)
   content = json.loads(response.read().decode('utf-8'))
 
   quote = content['quoteSummary']['result'][0]['financialData']
@@ -13,7 +13,3 @@ def showStats(symbol: str) -> tuple[str, str]:
   financialCurrency = quote['financialCurrency']
 
   return (open, financialCurrency)
-
-def saveTickerList(tickers: List[str]) -> None:
-  list = TickerList(tickers=tickers)
-  list.save()

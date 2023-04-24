@@ -5,7 +5,7 @@ from flask_mongoengine import MongoEngine # type: ignore
 
 from echo.flask_view import EchoAPI
 from ticker.ticker_view import TickerAPI
-from ticker.ticker_list_view import TickerListAPI
+from monitored.monitored_view import MonitoredAPI
 
 from .config import Config
 
@@ -30,7 +30,7 @@ def create_app() -> Flask:
 
   app.add_url_rule('/', view_func=EchoAPI.as_view('echo-api'), endpoint='/')
   app.add_url_rule('/ticker/<symbol>', view_func=TickerAPI.as_view('ticker-api'), endpoint='/ticker/<symbol>')
-  app.add_url_rule('/ticker_list', view_func=TickerListAPI.as_view('ticker-list-api'), endpoint='/ticker_list')
+  app.add_url_rule('/monitored', view_func=MonitoredAPI.as_view('monitored-api'), endpoint='/monitored')
   return app
 
 def create_db(app: Flask) -> None:
