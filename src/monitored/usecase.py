@@ -1,16 +1,15 @@
 from typing import List
 
-from monitored.monitored_model import Monitored
-from ticker.usecase import showStats
+from monitored.psql_repository import persist, get_all
+from ticker.usecase import show_stats
 
-def saveTickerList(tickers: List[str]) -> None:
-  list = Monitored(tickers=tickers)
-  list.save()
+def save_ticker_list(tickers: List[str]) -> None:
+  persist(tickers)
 
-def getStats() -> List[str]:
-  tickers = Monitored.objects[0].tickers
+def get_stats() -> List[str]:
+  tickers = get_all()
   result = []
   for ticker in tickers:
-    stats = showStats(ticker)
+    stats = show_stats(ticker)
     result.append(f'{ticker} - {stats[0]} {stats[1]}')
   return result

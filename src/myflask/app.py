@@ -5,7 +5,7 @@ from flask_mongoengine import MongoEngine # type: ignore
 
 from echo.flask_view import EchoAPI
 from ticker.ticker_view import TickerAPI
-from monitored.monitored_view import MonitoredAPI
+from monitored.view import MonitoredAPI
 
 from .config import Config
 

@@ -1,7 +1,7 @@
 import json
 import urllib.request
 
-def showStats(symbol: str) -> tuple[str, str]:
+def show_stats(symbol: str) -> tuple[str, str]:
   try:
     response = urllib.request.urlopen(f'https://query2.finance.yahoo.com/v10/finance/quoteSummary/{symbol}?modules=financialData')
   except Exception:
