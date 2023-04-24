@@ -5,3 +5,6 @@ class Config(object):
     result_backend='redis://localhost',
     task_ignore_result=True,
   )
+  MONGODB_SETTINGS = dict(
+    db='myapp',
+  )

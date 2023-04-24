@@ -1,9 +1,11 @@
 from flask import Flask
 # To fix mypy "Missing library stubs" error, install the celery-stubs package
 from celery import Celery, Task
+from flask_mongoengine import MongoEngine # type: ignore
 
 from echo.flask_view import EchoAPI
-from ticker.flask_view import TickerAPI
+from ticker.ticker_view import TickerAPI
+from ticker.ticker_list_view import TickerListAPI
 
 from .config import Config
 
@@ -28,10 +30,14 @@ def create_app() -> Flask:
 
   app.add_url_rule('/', view_func=EchoAPI.as_view('echo-api'), endpoint='/')
   app.add_url_rule('/ticker/<symbol>', view_func=TickerAPI.as_view('ticker-api'), endpoint='/ticker/<symbol>')
-
+  app.add_url_rule('/ticker_list', view_func=TickerListAPI.as_view('ticker-list-api'), endpoint='/ticker_list')
   return app
+
+def create_db(app: Flask) -> None:
+  MongoEngine(app)
 
 def serve() -> None:
   app = create_app()
-  
+  create_db(app)
+
   app.run(debug=True, use_reloader=True)

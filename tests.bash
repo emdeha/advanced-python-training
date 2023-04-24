@@ -20,6 +20,7 @@ python src/bin/echo_client.py asd test123 /
 python src/bin/echo_client.py asd test123 /ticker/MSFT
 python src/bin/echo_client.py asd test123 /ticker/VMW
 python src/bin/echo_client.py asd test123 /tick
+python src/bin/echo_client.py asd test123 /ticker_list?symbols=MSFT,VMW,AAPL
 
 sleep 1
 
