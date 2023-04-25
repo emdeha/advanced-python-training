@@ -1,0 +1,15 @@
+import json
+import urllib.request
+
+def showStats(symbol: str) -> tuple[str, str]:
+  try:
+    response = urllib.request.urlopen(f'https://query2.finance.yahoo.com/v10/finance/quoteSummary/{symbol}?modules=financialData')
+  except Exception:
+    raise Exception(symbol)
+  content = json.loads(response.read().decode('utf-8'))
+
+  quote = content['quoteSummary']['result'][0]['financialData']
+  open = quote['currentPrice']['fmt']
+  financialCurrency = quote['financialCurrency']
+
+  return (open, financialCurrency)
