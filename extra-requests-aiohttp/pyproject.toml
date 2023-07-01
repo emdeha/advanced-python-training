@@ -10,6 +10,7 @@ packages = [{include = "extra_requests_aiohttp"}]
 python = "^3.9"
 requests = "^2.31.0"
 aiohttp = "^3.8.4"
+aiohttp-wsgi = "^0.10.0"
 
 
 [build-system]
